@@ -255,69 +255,68 @@
             }
         }
 
-        /* --- PRINT STYLES (FIXED) --- */
+        /* --- PRINT STYLES (FIXED ALIGNMENT) --- */
         @media print {
             @page {
-                size: landscape; /* Forces printer to landscape mode */
-                margin: 0;       /* Removes default printer margins */
+                size: A4 landscape;
+                margin: 5mm; /* Small safety margin */
             }
             
-            body, html {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-                overflow: hidden !important; /* Prevents multiple pages */
+            /* Use Flexbox Column for entire print page */
+            body {
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100vh !important;
+                width: 100vw !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
             }
 
-            /* Hide everything that isn't the map/header */
+            /* Hide standard UI elements */
             #sidebar, #mobile-menu-btn, .leaflet-control-zoom {
                 display: none !important;
             }
 
-            /* Container layout for single page */
+            /* 1. HEADER (Top) */
             #print-header {
                 display: block !important;
-                height: 70px;
+                order: 1;
+                height: 50px;
+                flex-shrink: 0;
                 width: 100%;
                 text-align: center;
                 border-bottom: 2px solid #333;
-                box-sizing: border-box;
-                padding-top: 15px;
                 background: white;
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: 10;
+                margin-bottom: 5px;
+                position: static; /* No absolute positioning */
             }
 
+            /* 2. MAP (Middle - Fills Space) */
             #map {
-                position: absolute;
-                top: 70px; /* Below header */
-                left: 0;
+                display: block !important;
+                order: 2;
+                flex-grow: 1; /* Automatically fill remaining height */
                 width: 100% !important;
-                /* Shrink map to leave room for analytics footer */
-                height: calc(100vh - 240px) !important; 
+                height: auto !important;
                 border: 2px solid #333;
-                z-index: 1;
+                position: static; /* No absolute positioning */
             }
             
-            /* SHOW THE ANALYTICS FOOTER IN PRINT */
+            /* 3. ANALYTICS FOOTER (Bottom) */
             #print-analytics {
                 display: flex !important;
-                position: absolute;
-                bottom: 0;
-                left: 0;
+                order: 3;
+                flex-shrink: 0;
+                height: 180px; /* Fixed height for charts */
                 width: 100%;
-                height: 170px;
-                background: white;
-                justify-content: center;
+                justify-content: space-around;
                 align-items: center;
                 border-top: 2px solid #333;
-                padding: 10px;
-                box-sizing: border-box;
-                gap: 20px;
-                z-index: 10;
+                padding-top: 10px;
+                margin-top: 5px;
+                background: white;
+                position: static; /* No absolute positioning */
             }
             
             .print-chart-box {
@@ -334,7 +333,7 @@
             }
             
             .print-chart-box img {
-                max-height: 120px;
+                max-height: 130px;
                 max-width: 100%;
                 width: auto;
                 object-fit: contain;
@@ -348,11 +347,11 @@
                 letter-spacing: 0.5px;
             }
             
-            /* Ensure graphics render correctly in print */
+            /* Graphics Fixes */
             .leaflet-overlay-pane path { stroke-width: 1px !important; }
         }
         
-        /* Hide print section on screen */
+        /* Hide print sections on screen */
         #print-header, #print-analytics { display: none; }
 
     </style>
@@ -1006,4 +1005,3 @@
     </script>
 </body>
 </html>
-
