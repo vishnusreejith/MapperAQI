@@ -254,21 +254,54 @@
             }
         }
 
-        /* --- PRINT STYLES --- */
+        /* --- PRINT STYLES (FIXED) --- */
         @media print {
-            @page { size: A4 landscape; margin: 0.5cm; }
-            body { display: block; height: auto; overflow: visible; }
-            #sidebar { display: none !important; }
-            #mobile-menu-btn { display: none !important; }
-            #map { width: 100%; height: 180mm; border: 2px solid #333; }
+            @page {
+                size: landscape; /* Forces printer to landscape mode */
+                margin: 0;       /* Removes default printer margins */
+            }
+            
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden !important; /* Prevents multiple pages */
+            }
+
+            /* Hide everything that isn't the map/header */
+            #sidebar, #mobile-menu-btn, .leaflet-control-zoom {
+                display: none !important;
+            }
+
+            /* Container layout for single page */
             #print-header {
                 display: block !important;
-                margin-bottom: 20px;
+                height: 80px;
+                width: 100%;
                 text-align: center;
                 border-bottom: 2px solid #333;
-                padding-bottom: 10px;
+                box-sizing: border-box;
+                padding-top: 20px;
+                background: white;
+                position: absolute;
+                top: 0;
+                left: 0;
             }
+
+            #map {
+                position: absolute;
+                top: 80px; /* Below header */
+                left: 0;
+                width: 100% !important;
+                height: calc(100vh - 80px) !important; /* Fill rest of page */
+                border: 2px solid #333;
+                z-index: 1;
+            }
+            
+            /* Ensure graphics render correctly in print */
             .leaflet-overlay-pane path { stroke-width: 1px !important; }
+            canvas { max-width: 100%; }
         }
         #print-header { display: none; }
 
