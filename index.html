@@ -310,7 +310,7 @@
                 flex-shrink: 0;
                 height: 180px; /* Fixed height for charts */
                 width: 100%;
-                justify-content: space-around;
+                justify-content: center; /* Center single item */
                 align-items: center;
                 border-top: 2px solid #333;
                 padding-top: 10px;
@@ -320,10 +320,10 @@
             }
             
             .print-chart-box {
-                width: 45%;
+                width: 50%; /* Adjusted width for single item */
                 height: 100%;
                 text-align: center;
-                border: 1px solid #ddd;
+                /* border: 1px solid #ddd; removed border for cleaner look */
                 padding: 5px;
                 box-sizing: border-box;
                 display: flex;
@@ -333,15 +333,15 @@
             }
             
             .print-chart-box img {
-                max-height: 130px;
+                max-height: 140px;
                 max-width: 100%;
                 width: auto;
                 object-fit: contain;
             }
             
             .print-chart-box h3 {
-                font-size: 12px;
-                margin: 0 0 5px 0;
+                font-size: 14px;
+                margin: 0 0 10px 0;
                 color: #333;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
@@ -498,12 +498,8 @@
     <!-- PRINT ANALYTICS FOOTER (Visible only in Print) -->
     <div id="print-analytics">
         <div class="print-chart-box">
-            <h3>24h Pollution Trend</h3>
-            <img id="print-aqi-img" alt="Chart not generated yet">
-        </div>
-        <div class="print-chart-box">
-            <h3>Wind Rose Analysis</h3>
-            <img id="print-wind-img" alt="Chart not generated yet">
+            <h3>Wind Rose Analysis (Prevailing Winds)</h3>
+            <img id="print-wind-img" alt="Chart generating..." style="display: block;">
         </div>
     </div>
 
@@ -941,11 +937,6 @@
             }
             aqiChartInstance.data.datasets[0].data = avgs;
             aqiChartInstance.update();
-            
-            // UPDATE PRINT IMAGE
-            try {
-                document.getElementById('print-aqi-img').src = aqiChartInstance.toBase64Image();
-            } catch(e) { console.log("Chart image update fail", e); }
         }
 
         function updateWindRoseData() {
@@ -958,10 +949,13 @@
             windRoseChartInstance.data.datasets[0].data = bins;
             windRoseChartInstance.update();
             
-            // UPDATE PRINT IMAGE
-            try {
-                document.getElementById('print-wind-img').src = windRoseChartInstance.toBase64Image();
-            } catch(e) { console.log("Wind chart image update fail", e); }
+            // UPDATE PRINT IMAGE with delay to allow render
+            setTimeout(() => {
+                 try {
+                    const url = windRoseChartInstance.toBase64Image();
+                    document.getElementById('print-wind-img').src = url;
+                } catch(e) { console.log("Wind chart image update fail", e); }
+            }, 500);
         }
 
         // --- 8. UTILS ---
@@ -1005,3 +999,4 @@
     </script>
 </body>
 </html>
+
